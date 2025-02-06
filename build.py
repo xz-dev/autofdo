@@ -87,8 +87,6 @@ stderr:
 async def perf(test):
     """Run a perf command for a test asynchronously."""
     output_file = get_perfdata_name(test)
-    if Path(output_file).exists():
-        return output_file
     command = f'perf record --pfm-events "{perf_event}" -a -N -b -c 500009 -o "{output_file}" -- time phoronix-test-suite batch-run "{test}"'
     await run_command(command)
     return output_file
