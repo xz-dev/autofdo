@@ -34,6 +34,7 @@ RUN phoronix-test-suite install pts/ctx-clock
 RUN phoronix-test-suite install pts/sysbench
 RUN phoronix-test-suite install pts/povray
 COPY phoronix-test-suite.xml /etc/phoronix-test-suite.xml
+ENV FORCE_TIMES_TO_RUN=1
 
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm libpfm devtools perf llvm

@@ -87,6 +87,8 @@ stderr:
 async def perf(test):
     """Run a perf command for a test asynchronously."""
     output_file = get_perfdata_name(test)
+    if Path(output_file).exists():
+        return output_file
     command = f'perf record --pfm-events "{perf_event}" -a -N -b -c 500009 -o "{output_file}" -- time phoronix-test-suite batch-run "{test}"'
     await run_command(command)
     return output_file
@@ -113,18 +115,23 @@ async def propeller(tests):
             perfdata_file = get_perfdata_name(test)
             f.write(f"{perfdata_file}\n")
 
+    output_propeller = Path("output/propeller")
+    if not output_propeller.exists():
+        output_propeller.mkdir(parents=True)
+    propeller_profile_prefix = f"{output_propeller}/propeller"
+
     command = (
         f'create_llvm_prof --binary="{vmkernel}" --profile="@{perf_list_file}"'
         f" --format=propeller --propeller_output_module_name"
-        f" --out=output/propeller/cc_profile.txt"
-        f" --propeller_symorder=output/propeller/ld_profile.txt"
+        f" --out={propeller_profile_prefix}_cc_profile.txt"
+        f" --propeller_symorder={propeller_profile_prefix}_ld_profile.txt"
     )
     await run_command(command)
 
 
 async def main():
     # Get CPU core count for limiting concurrency
-    cpu_count = multiprocessing.cpu_count()
+    cpu_count = int(multiprocessing.cpu_count() / 2)
 
     # Using a semaphore to limit the concurrency
     semaphore = asyncio.Semaphore(cpu_count)
