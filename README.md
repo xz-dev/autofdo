@@ -74,6 +74,12 @@ podman run --rm \
 7. Build an kernel with AutoFDO Profile and Propeller Profile
 8. Reboot and enjoy!
 
+## Performance Results
+
+Below are the performance comparison results before and after applying the kernel optimization profiles:
+1. No kernel optimization profiles: https://openbenchmarking.org/result/2502094-NE-CPU25415319
+2. AutoFDO and Propeller: https://openbenchmarking.org/result/2502105-NE-CPU23727229
+
 ## Output Files
 
 Profiles will be saved to `./output` directory:
