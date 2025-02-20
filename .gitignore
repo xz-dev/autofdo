@@ -1,3 +1,4 @@
 *.data
 *.afdo
 output/
+/Containerfile

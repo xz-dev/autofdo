@@ -1,6 +1,8 @@
 FROM docker.io/archlinux:base-devel
     MAINTAINER xz <xiangzhedev@gmail.com>
 
+COPY 10-pacclean.hook /etc/pacman.d/hooks/10-pacclean.hook
+
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm wget unzip
 
@@ -14,27 +16,12 @@ RUN wget https://github.com/phoronix-test-suite/phoronix-test-suite/archive/refs
 
 RUN pacman -S --noconfirm php
 
-#RUN phoronix-test-suite install cpu
-#RUN phoronix-test-suite install-dependencies cpu
 # Due network is slow, easier to retry
-RUN phoronix-test-suite install pts/rodinia
-RUN phoronix-test-suite install pts/namd
-RUN phoronix-test-suite install pts/stockfish
-RUN phoronix-test-suite install pts/x264
-RUN phoronix-test-suite install pts/x265
-RUN phoronix-test-suite install pts/kvazaar
-RUN phoronix-test-suite install pts/compress-7zip
-RUN phoronix-test-suite install pts/blender
-RUN phoronix-test-suite install pts/asmfish
-RUN phoronix-test-suite install pts/build-linux-kernel
-RUN phoronix-test-suite install pts/build-gcc
-RUN phoronix-test-suite install pts/radiance
-RUN phoronix-test-suite install pts/openssl
-RUN phoronix-test-suite install pts/ctx-clock
-RUN phoronix-test-suite install pts/sysbench
-RUN phoronix-test-suite install pts/povray
+{{INSTALL_COMMANDS}}
+
 COPY phoronix-test-suite.xml /etc/phoronix-test-suite.xml
-ENV FORCE_TIMES_TO_RUN=1
+# Default run time but no DynamicRunCount
+#ENV FORCE_TIMES_TO_RUN=3
 
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm libpfm devtools perf llvm
