@@ -20,6 +20,8 @@ RUN pacman -S --noconfirm php
 {{INSTALL_COMMANDS}}
 
 COPY phoronix-test-suite.xml /etc/phoronix-test-suite.xml
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm blender
 # Default run time but no DynamicRunCount
 #ENV FORCE_TIMES_TO_RUN=3
 
